@@ -14,25 +14,22 @@ namespace MvcCoreSessionEmpleados.Controllers
         }
         public async Task<IActionResult> SessionEmpleadosV4(int? idempleado)
         {
-            List<int> idsEmpleados = null;
+            //RECUPERAMOS LA COLECCION
+            List<int> idsEmpleados = HttpContext.Session.GetObject<List<int>>("IDSEMPLEADOS");
+            if (idsEmpleados == null)
+            {
+                //creamos la coleccion
+                idsEmpleados = new List<int>();
+            }
+            
             if (idempleado != null)
             {
-                //Almacenamos lo minimo
-                if (HttpContext.Session.GetObject<List<int>>("IDSEMPLEADOS") != null)
-                {
-                    //RECUPERAMOS LA COLECCION
-                    idsEmpleados = HttpContext.Session.GetObject<List<int>>("IDSEMPLEADOS");
-                }
-                else
-                {
-                    //creamos la coleccion
-                    idsEmpleados = new List<int>();
-                }
                 //Agregamos el id del empleado
                 idsEmpleados.Add(idempleado.Value);
                 HttpContext.Session.SetObject("IDSEMPLEADOS", idsEmpleados);
                 ViewData["MENSAJE"] = "Empleado almacenado: " + idempleado.Value;
             }
+
             List<Empleado> empleados = await this.repo.GetEmpleadosAsyncNotIn(idsEmpleados);
             return View(empleados);
         }
