@@ -1,0 +1,31 @@
+﻿@model List<Empleado>
+<h1>Empleados almacenados OK</h1>
+<a asp-controller="Empleados" asp-action="SessionEmpleadosOk">Volver a empledos</a>
+
+@if (Model == null)
+{
+    <h2 style="color:red">NO hay ningun empleado</h2>
+}
+else
+{
+    <table class="table table-bordered table-warning">
+        <thead></thead>
+            <tr>
+                <th>IdEmpleado</th>
+                <th>Apellido</th>
+                <th>Oficio</th>
+                <th>Salario</th>
+        </tr>
+        <tbody>
+            @foreach (Empleado empleado in Model)
+            {
+                <tr>
+                    <td>@empleado.IdEmpleado</td>
+                    <td>@empleado.Apellido</td>
+                    <td>@empleado.Oficio</td>
+                    <td>@empleado.Salario</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
