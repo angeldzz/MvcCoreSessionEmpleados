@@ -11,6 +11,8 @@ string connectionstring = builder.Configuration.GetConnectionString("SqlHospital
 builder.Services.AddTransient<RepositoryEmpleados>();
 builder.Services.AddDbContext<HospitalContext>(options =>
     options.UseSqlServer(connectionstring));
+
+builder.Services.AddMemoryCache();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 

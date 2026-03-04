@@ -1,0 +1,67 @@
+﻿@model List<Empleado>
+@using Microsoft.Extensions.Caching.Memory;
+@inject IMemoryCache memoryCache;
+@{
+    //NECESITAMOS SESSION EN LA VISTA PARA COMPROBAR SUS DATOS
+    List<int> ids = Context.Session.GetObject<List<int>>("IDSEMPLEADOS");
+    List<Empleado> favoritos = this.memoryCache.Get<List<Empleado>>("FAVORITOS");
+}
+<h1 style="color:blue">Session Empleados IDS</h1>
+<h3 style="color:green">@ViewData["MENSAJE"]</h3>
+
+<a asp-controller="Empleados" asp-action="EmpleadosAlmacenadosV5" class="btn btn-outline-primary">
+    Ver Empleados Almacenados</a>
+<a asp-controller="Empleados" asp-action="EmpleadosFavoritos" class="btn btn-outline-primary">
+    Ver Empleados Favoritos
+</a>
+@if (ids != null)
+{
+    <h3 style="color:lightgreen">Empleados Session: @ids.Count()</h3>
+}
+@if (favoritos != null)
+{
+    <h3 style="color:lightgreen">Empleados Favoritos: @favoritos.Count</h3>
+}
+<ul class="list-group ">
+    @foreach (Empleado empleado in Model)
+    {
+        <li class="list-group-item list-group-item-dark">
+            @empleado.Apellido -
+            <a 
+            asp-controller="Empleados"
+            asp-action="SessionEmpleadosV5"
+            asp-route-idfavorito="@empleado.IdEmpleado"
+            class="btn btn-outline-warning"
+            >Favorito</a>
+        @*Preguntamos si existe el empleado en session*@    
+            @if (ids == null)
+            {
+                //NO tenemos session
+                <a 
+                asp-controller="Empleados" 
+                asp-action="SessionEmpleadosV5" 
+                   asp-route-idempleado="@empleado.IdEmpleado"
+                class="btn btn-success">
+                    Almacenar empleado
+                </a>
+            }
+            else
+            {
+                //Buscamos si el empleado que estamos recorriendo esta en la lista
+                if (ids.Contains(empleado.IdEmpleado))
+                {
+                    <img src="~/images/spiderman.jpg" style="width:35px;"/>
+                }
+                else
+                {
+                    <a asp-controller="Empleados"
+                       asp-action="SessionEmpleadosV5"
+                       asp-route-idempleado="@empleado.IdEmpleado"
+                       class="btn btn-success">
+                        Almacenar empleado
+                    </a>
+                }
+            }
+        </li>
+    }
+</ul>
