@@ -17,18 +17,20 @@ namespace MvcCoreSessionEmpleados.Controllers
             this.repo = repo;
             this.memoryCache = memoryCache;
         }
-        public IActionResult EmpleadosFavoritos()
+        public IActionResult EmpleadosFavoritos(int? ideliminar)
         {
-            if (this.memoryCache.Get("FAVORITOS") == null)
+            if (ideliminar != null)
             {
-                ViewData["MENSAJE"] = "No existen empleados favoritos";
-                return View();
+                List<Empleado> empleadosFavoritos = this.memoryCache.Get<List<Empleado>>("FAVORITOS");
+                //Buscamos al empleado a eliminar por su id
+                Empleado delete = empleadosFavoritos.Find(z => z.IdEmpleado == ideliminar.Value);
+                empleadosFavoritos.Remove(delete);
+                if (empleadosFavoritos.Count == 0)
+                {
+                    this.memoryCache.Remove("FAVORITOS");
+                }
             }
-            else
-            {
-                List<Empleado> favoritos = this.memoryCache.Get<List<Empleado>>("FAVORITOS");
-                return View(favoritos);
-            }
+            return View();
         }
         public async Task<IActionResult> SessionEmpleadosV5
             (int? idempleado, 

@@ -27,13 +27,31 @@
     {
         <li class="list-group-item list-group-item-dark">
             @empleado.Apellido -
-            <a 
-            asp-controller="Empleados"
-            asp-action="SessionEmpleadosV5"
-            asp-route-idfavorito="@empleado.IdEmpleado"
-            class="btn btn-outline-warning"
-            >Favorito</a>
-        @*Preguntamos si existe el empleado en session*@    
+            @if (favoritos == null)
+            {
+                <a asp-controller="Empleados"
+                   asp-action="SessionEmpleadosV5"
+                   asp-route-idfavorito="@empleado.IdEmpleado"
+                   class="btn btn-outline-warning">Favorito</a>
+            }
+            else
+            {
+                //debemos preguntar si existe el empleado con el id almacenado
+                //buscamos dentro de favoritos si esta el empleado
+                Empleado empFavorito = favoritos.Find(x => x.IdEmpleado == empleado.IdEmpleado);
+                @if (empFavorito == null)
+                {
+                    <a asp-controller="Empleados"
+                       asp-action="SessionEmpleadosV5"
+                       asp-route-idfavorito="@empleado.IdEmpleado"
+                       class="btn btn-outline-warning">Favorito</a>
+                }
+                else
+                {
+                    <img src="~/images/OK.webp" style="width:35px;" />
+                }
+            }
+            @*Preguntamos si existe el empleado en session*@    
             @if (ids == null)
             {
                 //NO tenemos session

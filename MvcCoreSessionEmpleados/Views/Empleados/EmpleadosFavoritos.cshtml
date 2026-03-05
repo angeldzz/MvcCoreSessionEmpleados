@@ -23,6 +23,7 @@ else
             <th>Apellido</th>
             <th>Oficio</th>
             <th>Salario</th>
+            <th></th>
         </tr>
         <tbody>
             @foreach (Empleado empleado in favoritos)
@@ -32,6 +33,13 @@ else
                     <td>@empleado.Apellido</td>
                     <td>@empleado.Oficio</td>
                     <td>@empleado.Salario</td>
+                    <td>
+                        <a asp-controller="Empleados"
+                           asp-action="EmpleadosFavoritos"
+                            asp-route-ideliminar="@empleado.IdEmpleado">
+                            Delete
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>
